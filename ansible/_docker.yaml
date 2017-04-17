@@ -12,4 +12,9 @@
       - role: packages-docker
         when: allow_package_installation|bool == true
       - role: docker-storage
+      - role: docker-proxy
+        when: >
+                (https_proxy is defined and https_proxy is not empty) or
+                (http_proxy is defined and http_proxy is not empty) or
+                (no_proxy is defined and no_proxy is not empty)
       - role: docker

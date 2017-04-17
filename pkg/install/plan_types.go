@@ -14,6 +14,9 @@ type NetworkConfig struct {
 	ServiceCIDRBlock string `yaml:"service_cidr_block"`
 	PolicyEnabled    bool   `yaml:"policy_enabled"`
 	UpdateHostsFiles bool   `yaml:"update_hosts_files"`
+	HTTPProxy        string `yaml:"http_proxy"`
+	HTTPSProxy       string `yaml:"https_proxy"`
+	NoProxy          string `yaml:"no_proxy"`
 }
 
 // CertsConfig describes the cluster's trust and certificate configuration

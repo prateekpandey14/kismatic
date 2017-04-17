@@ -8,3 +8,8 @@
 
     roles:
       - role: packages-repo
+
+    environment:
+      https_proxy: "{{ https_proxy }}"
+      http_proxy: "{{ http_proxy }}"
+      no_proxy: "{{ no_proxy }}"
