@@ -222,7 +222,7 @@ var commentMap = map[string]string{
 	"direct_lvm":               "Configure devicemapper in direct-lvm mode (RHEL/CentOS only).",
 	"block_device":             "Path to the block device that will be used for direct-lvm mode. This device will be wiped and used exclusively by docker.",
 	"enable_deferred_deletion": "Set to true if you want to enable deferred deletion when using direct-lvm mode.",
-	"http_proxy":               "A comma-separated list of http domains proxy should be used for.",
-	"https_proxy":              "A comma-separated list of https domains proxy should be used for.",
-	"no_proxy":                 "A comma-separated list of domains proxy should not be used for.",
+	"http_proxy":               "A comma-separated list of http domains proxy should be used for. This is equivalent to setting the 'http_proxy' environment variable",
+	"https_proxy":              "A comma-separated list of https domains proxy should be used for. This is equivalent to setting the 'https_proxy' environment variable",
+	"no_proxy":                 "A comma-separated list of domains proxy should not be used for. This is equivalent to setting the 'no_proxy' environment variable",
 }
