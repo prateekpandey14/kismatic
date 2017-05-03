@@ -32,6 +32,7 @@
   - include: _kube-dns.yaml
   - include: _kube-ingress.yaml
     when: configure_ingress|bool == true
+  - include: _heapster.yaml
   - include: _kube-dashboard.yaml
   - include: _storage.yaml
     when: configure_storage|bool == true

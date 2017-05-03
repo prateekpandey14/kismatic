@@ -1,0 +1,56 @@
+---
+  - name: create /etc/kubernetes/specs directory
+    file:
+      path: "{{ kubernetes_spec_dir }}"
+      state: directory
+
+  - name: copy hostpath-pv.yaml to remote
+    template:
+      src: hostpath-pv.yaml
+      dest: "{{ kubernetes_spec_dir }}/heapster-pv.yaml"
+    when: heapster_pv is not defined or heapster_pv|bool == false
+  - name: copy heapster-rbac.yaml to remote
+    template:
+      src: heapster-rbac.yaml
+      dest: "{{ kubernetes_spec_dir }}/heapster-rbac.yaml"
+  - name: copy influxdb.yaml to remote
+    template:
+      src: influxdb.yaml
+      dest: "{{ kubernetes_spec_dir }}/influxdb.yaml"
+  - name: copy heapster.yaml to remote
+    template:
+      src: heapster.yaml
+      dest: "{{ kubernetes_spec_dir }}/heapster.yaml"
+
+  - name: create heapster persistent volume
+    command: kubectl apply -f {{ kubernetes_spec_dir }}/heapster-pv.yaml
+  - name: create heapster rolebinding
+    command: kubectl apply -f {{ kubernetes_spec_dir }}/heapster-rbac.yaml
+  - name: start influxdb controller
+    command: kubectl apply -f {{ kubernetes_spec_dir }}/influxdb.yaml
+  - name: start heapster controller
+    command: kubectl apply -f {{ kubernetes_spec_dir }}/heapster.yaml
+
+  - name: wait until the influxdb pods are ready
+    command: kubectl get deployment heapster-influxdb -n kube-system -o jsonpath='{.status.availableReplicas}'
+    register: readyReplicas
+    until: readyReplicas.stdout|int == {{ monitoring_influxdb_replicas }}
+    retries: 24
+    delay: 10
+    failed_when: false # We don't want this task to actually fail (We catch the failure with a custom msg in the next task)
+  - name: fail if the tiller pod is not ready
+    fail:
+      msg: "Timed out waiting for the influxdb pods to be in the ready state."
+    when: readyReplicas.stdout|int != {{ monitoring_influxdb_replicas }}
+
+  - name: wait until the heapster pods are ready
+    command: kubectl get deployment heapster -n kube-system -o jsonpath='{.status.availableReplicas}'
+    register: readyReplicas
+    until: readyReplicas.stdout|int == {{ heapster_replcias }}
+    retries: 24
+    delay: 10
+    failed_when: false # We don't want this task to actually fail (We catch the failure with a custom msg in the next task)
+  - name: fail if the tiller pod is not ready
+    fail:
+      msg: "Timed out waiting for the heapster pods to be in the ready state."
+    when: readyReplicas.stdout|int != {{ heapster_replcias }}
