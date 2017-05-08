@@ -1,0 +1,19 @@
+---
+  - hosts: storage
+    any_errors_fatal: true
+    name: "Create Gluster Volume for Heapster Cluster Monitoring"
+    remote_user: root
+    become_method: sudo
+    vars_files:
+      - group_vars/all.yaml
+    vars:
+      volume_name: "heapster-influxdb"
+      volume_replica_count: 1
+      volume_distribution_count: 1
+      volume_storage_class: "kismatic"
+      volume_quota_gb: 10
+      volume_quota_bytes: 10737418240
+      volume_mount: "/"
+
+    roles:
+      - role: volume-add-if-dne

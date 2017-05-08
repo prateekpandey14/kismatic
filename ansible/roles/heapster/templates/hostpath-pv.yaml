@@ -2,6 +2,8 @@ kind: PersistentVolume
 apiVersion: v1
 metadata:
   name: heapster-influxdb
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "kismatic"
 spec:
   capacity:
     storage: 10Gi

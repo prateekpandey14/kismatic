@@ -49,14 +49,14 @@ type ClusterCatalog struct {
 	EnableGluster bool `yaml:"configure_storage"`
 
 	// volume add vars
-	VolumeName              string `yaml:"volume_name"`
-	VolumeReplicaCount      int    `yaml:"volume_replica_count"`
-	VolumeDistributionCount int    `yaml:"volume_distribution_count"`
-	VolumeStorageClass      string `yaml:"volume_storage_class"`
-	VolumeQuotaGB           int    `yaml:"volume_quota_gb"`
-	VolumeQuotaBytes        int    `yaml:"volume_quota_bytes"`
-	VolumeMount             string `yaml:"volume_mount"`
-	VolumeAllowedIPs        string `yaml:"volume_allow_ips"`
+	VolumeName              string `yaml:"volume_name,omitempty"`
+	VolumeReplicaCount      int    `yaml:"volume_replica_count,omitempty"`
+	VolumeDistributionCount int    `yaml:"volume_distribution_count,omitempty"`
+	VolumeStorageClass      string `yaml:"volume_storage_class,omitempty"`
+	VolumeQuotaGB           int    `yaml:"volume_quota_gb,omitempty"`
+	VolumeQuotaBytes        int    `yaml:"volume_quota_bytes,omitempty"`
+	VolumeMount             string `yaml:"volume_mount,omitempty"`
+	VolumeAllowedIPs        string `yaml:"volume_allow_ips,omitempty"`
 
 	TargetVersion string `yaml:"kismatic_short_version"`
 
@@ -70,6 +70,10 @@ type ClusterCatalog struct {
 	DockerDirectLVMDeferredDeletionEnabled bool   `yaml:"docker_direct_lvm_deferred_deletion_enabled"`
 
 	LocalKubeconfigDirectory string `yaml:"local_kubeconfig_directory"`
+
+	// heapster
+	HeapsterMonitoringEnabled                 bool `yaml:"heapster_monitoring_enabled"`
+	HeapsterMonitoringPersistentVolumeEnabled bool `yaml:"heapster_monitoring_persistent_volume_enabled"`
 }
 
 type NFSVolume struct {

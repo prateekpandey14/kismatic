@@ -396,23 +396,7 @@ func (ae *ansibleExecutor) AddVolume(plan *Plan, volume StorageVolume) error {
 	cc.VolumeQuotaGB = volume.SizeGB
 	cc.VolumeQuotaBytes = volume.SizeGB * (1 << (10 * 3))
 	cc.VolumeMount = "/"
-
-	// Allow nodes and pods to access volumes
-	allowedNodes := plan.Master.Nodes
-	allowedNodes = append(allowedNodes, plan.Worker.Nodes...)
-	allowedNodes = append(allowedNodes, plan.Ingress.Nodes...)
-	allowedNodes = append(allowedNodes, plan.Storage.Nodes...)
-
-	allowed := volume.AllowAddresses
-	allowed = append(allowed, plan.Cluster.Networking.PodCIDRBlock)
-	for _, n := range allowedNodes {
-		ip := n.IP
-		if n.InternalIP != "" {
-			ip = n.InternalIP
-		}
-		allowed = append(allowed, ip)
-	}
-	cc.VolumeAllowedIPs = strings.Join(allowed, ",")
+	cc.VolumeAllowedIPs = volumeAllowedIPs(plan, volume.AllowAddresses...)
 
 	t := task{
 		name:           "add-volume",
@@ -424,6 +408,25 @@ func (ae *ansibleExecutor) AddVolume(plan *Plan, volume StorageVolume) error {
 	}
 	util.PrintHeader(ae.stdout, "Add Persistent Storage Volume", '=')
 	return ae.execute(t)
+}
+
+func volumeAllowedIPs(plan *Plan, additionalAddresses ...string) string {
+	// Allow nodes and pods to access volumes
+	allowedNodes := plan.Master.Nodes
+	allowedNodes = append(allowedNodes, plan.Worker.Nodes...)
+	allowedNodes = append(allowedNodes, plan.Ingress.Nodes...)
+	allowedNodes = append(allowedNodes, plan.Storage.Nodes...)
+
+	allowed := additionalAddresses
+	allowed = append(allowed, plan.Cluster.Networking.PodCIDRBlock)
+	for _, n := range allowedNodes {
+		ip := n.IP
+		if n.InternalIP != "" {
+			ip = n.InternalIP
+		}
+		allowed = append(allowed, ip)
+	}
+	return strings.Join(allowed, ",")
 }
 
 func (ae *ansibleExecutor) UpgradeEtcd2Nodes(plan Plan, nodesToUpgrade []ListableNode) error {
@@ -658,20 +661,23 @@ func (ae *ansibleExecutor) buildClusterCatalog(p *Plan) (*ansible.ClusterCatalog
 	}
 
 	cc := ansible.ClusterCatalog{
-		ClusterName:               p.Cluster.Name,
-		AdminPassword:             p.Cluster.AdminPassword,
-		TLSDirectory:              tlsDir,
-		CalicoNetworkType:         p.Cluster.Networking.Type,
-		ServicesCIDR:              p.Cluster.Networking.ServiceCIDRBlock,
-		PodCIDR:                   p.Cluster.Networking.PodCIDRBlock,
-		DNSServiceIP:              dnsIP,
-		EnableModifyHosts:         p.Cluster.Networking.UpdateHostsFiles,
-		EnableCalicoPolicy:        p.Cluster.Networking.PolicyEnabled,
-		EnablePackageInstallation: p.Cluster.AllowPackageInstallation,
-		PackageRepoURLs:           p.Cluster.PackageRepoURLs,
-		KuberangPath:              filepath.Join("kuberang", "linux", "amd64", "kuberang"),
-		DisconnectedInstallation:  p.Cluster.DisconnectedInstallation,
-		TargetVersion:             KismaticVersion.String(),
+		ClusterName:                               p.Cluster.Name,
+		AdminPassword:                             p.Cluster.AdminPassword,
+		TLSDirectory:                              tlsDir,
+		CalicoNetworkType:                         p.Cluster.Networking.Type,
+		ServicesCIDR:                              p.Cluster.Networking.ServiceCIDRBlock,
+		PodCIDR:                                   p.Cluster.Networking.PodCIDRBlock,
+		DNSServiceIP:                              dnsIP,
+		EnableModifyHosts:                         p.Cluster.Networking.UpdateHostsFiles,
+		EnableCalicoPolicy:                        p.Cluster.Networking.PolicyEnabled,
+		EnablePackageInstallation:                 p.Cluster.AllowPackageInstallation,
+		PackageRepoURLs:                           p.Cluster.PackageRepoURLs,
+		DisconnectedInstallation:                  p.Cluster.DisconnectedInstallation,
+		HeapsterMonitoringEnabled:                 p.Features.HeapsterMonitoring.Enabled,
+		HeapsterMonitoringPersistentVolumeEnabled: p.Features.HeapsterMonitoring.PersistentVolumeEnabled,
+		VolumeAllowedIPs:                          volumeAllowedIPs(p),
+		KuberangPath:                              filepath.Join("kuberang", "linux", "amd64", "kuberang"),
+		TargetVersion:                             KismaticVersion.String(),
 	}
 	cc.LocalKubeconfigDirectory = filepath.Join(ae.options.GeneratedAssetsDirectory, "kubeconfig")
 	// absolute path required for ansible

@@ -57,7 +57,16 @@ var validPlan = Plan{
 		Nodes: []Node{
 			{
 				Host: "etcd01",
-				IP:   "192.168.205.10",
+				IP:   "192.168.205.13",
+			},
+		},
+	},
+	Storage: OptionalNodeGroup{
+		ExpectedCount: 1,
+		Nodes: []Node{
+			{
+				Host: "storage01",
+				IP:   "192.168.205.14",
 			},
 		},
 	},
@@ -802,19 +811,15 @@ func TestPackageManager(t *testing.T) {
 	}{
 		{
 			pm: PackageManager{
-				BaseFeature{
-					Enabled:  true,
-					Provider: "helm",
-				},
+				Enabled:  true,
+				Provider: "helm",
 			},
 			valid: true,
 		},
 		{
 			pm: PackageManager{
-				BaseFeature{
-					Enabled:  true,
-					Provider: "foo",
-				},
+				Enabled:  true,
+				Provider: "foo",
 			},
 			valid: false,
 		},
@@ -825,4 +830,12 @@ func TestPackageManager(t *testing.T) {
 			t.Errorf("test %d: expect %t, but got %t", i, test.valid, ok)
 		}
 	}
+}
+
+func TestHeapsterMonitoring(t *testing.T) {
+	p := validPlan
+	p.Features.HeapsterMonitoring.Enabled = true
+	p.Features.HeapsterMonitoring.PersistentVolumeEnabled = true
+	p.Storage = OptionalNodeGroup{}
+	assertInvalidPlan(t, p)
 }

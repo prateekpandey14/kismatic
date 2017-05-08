@@ -8,7 +8,7 @@
     template:
       src: hostpath-pv.yaml
       dest: "{{ kubernetes_spec_dir }}/heapster-pv.yaml"
-    when: heapster_pv is not defined or heapster_pv|bool == false
+    when: "heapster_monitoring_persistent_volume_enabled|bool == false"
   - name: copy heapster-rbac.yaml to remote
     template:
       src: heapster-rbac.yaml
@@ -22,8 +22,9 @@
       src: heapster.yaml
       dest: "{{ kubernetes_spec_dir }}/heapster.yaml"
 
-  - name: create heapster persistent volume
+  - name: create heapster hostPath volume
     command: kubectl apply -f {{ kubernetes_spec_dir }}/heapster-pv.yaml
+    when: "heapster_monitoring_persistent_volume_enabled|bool == false"
   - name: create heapster rolebinding
     command: kubectl apply -f {{ kubernetes_spec_dir }}/heapster-rbac.yaml
   - name: start influxdb controller
