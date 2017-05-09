@@ -32,13 +32,9 @@
   - include: _kube-dns.yaml
   - include: _kube-ingress.yaml
     when: configure_ingress|bool == true
+  - include: _kube-dashboard.yaml
   - include: _storage.yaml
     when: configure_storage|bool == true
   - include: _nfs-volumes.yaml
     when: nfs_volumes|length > 0
-  - include: _kube-dashboard.yaml
-  - include: _heapster-volume.yaml
-    when: heapster_monitoring_persistent_volume_enabled|bool == true
-  - include: _heapster.yaml
-    when: heapster_monitoring_enabled|bool == true
   - include: _update-version.yaml

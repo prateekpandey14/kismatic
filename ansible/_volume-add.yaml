@@ -7,4 +7,4 @@
       - group_vars/all.yaml
 
     roles:
-      - volume-add
+      - role: volume-add

@@ -1,8 +1,0 @@
----
-  - name: verify volume does not alreay exist
-    command: gluster volume list
-    register: out
-
-  - name: create Gluster volume
-    include: ../volume-add/tasks/main.yaml
-    when: '"{{ volume_name }}" not in out.stdout'

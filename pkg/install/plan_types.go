@@ -133,6 +133,10 @@ type StorageVolume struct {
 	StorageClass string
 	// AllowAddresses is a list of address wildcards that have access to the volume
 	AllowAddresses []string
+	// AccessMode can be ReadWriteOnce/ReadOnlyMany/ReadWriteMany
+	AccessMode string
+	// SkipIfExists will first check if the volume exists and noop when it does
+	SkipIfExists bool
 }
 
 type SSHConnection struct {

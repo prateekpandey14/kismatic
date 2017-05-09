@@ -8,7 +8,7 @@ spec:
   capacity:
     storage: {{ volume_quota_gb }}Gi
   accessModes:
-    - ReadWriteMany
+    - {{ volume_access_mode }}
   persistentVolumeReclaimPolicy: Retain
   nfs:
     path: /{{ volume_name }}

@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/apprenda/kismatic/pkg/install"
+	"github.com/apprenda/kismatic/pkg/util"
 	"github.com/spf13/cobra"
 )
 
@@ -119,6 +120,7 @@ func doVolumeAdd(out io.Writer, opts volumeAddOptions, planFile string, args []s
 		}
 		return errors.New("storage volume validation failed")
 	}
+	util.PrintHeader(out, "Add Persistent Storage Volume", '=')
 	if err := exec.AddVolume(plan, v); err != nil {
 		return fmt.Errorf("error adding new volume: %v", err)
 	}

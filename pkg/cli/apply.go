@@ -115,6 +115,27 @@ func (c *applyCmd) run() error {
 		return fmt.Errorf("error installing: %v", err)
 	}
 
+	// Heapster
+	if plan.Features.HeapsterMonitoring.Enabled {
+		util.PrintHeader(c.out, "Installing Heapster Addon on the Cluster", '=')
+		v := install.StorageVolume{
+			Name:              "heapster-influxdb",
+			SizeGB:            10,
+			ReplicateCount:    1,
+			DistributionCount: 1,
+			StorageClass:      "kismatic",
+			AccessMode:        "ReadWriteOnce",
+		}
+		if plan.Features.HeapsterMonitoring.PersistentVolumeEnabled {
+			if err := c.executor.AddVolume(plan, v); err != nil {
+				return fmt.Errorf("error creating heapster volume: %v", err)
+			}
+		}
+		if err := c.executor.RunPlay("_heapster.yaml", plan); err != nil {
+			return fmt.Errorf("error installing heapster: %v", err)
+		}
+	}
+
 	// Install Helm
 	if plan.Features.PackageManager.Enabled {
 		util.PrintHeader(c.out, "Installing Helm on the Cluster", '=')
