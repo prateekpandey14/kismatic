@@ -169,9 +169,8 @@ var _ = Describe("kismatic", func() {
 
 					// install cluster
 					installOpts := installOptions{
-						allowPackageInstallation:                  true,
-						enableNetworkPolicy:                       true,
-						heapsterMonitoringPersistentVolumeEnabled: true,
+						allowPackageInstallation: true,
+						enableNetworkPolicy:      true,
 					}
 					err := installKismatic(nodes, installOpts, sshKey)
 					Expect(err).ToNot(HaveOccurred())

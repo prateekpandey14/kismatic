@@ -831,11 +831,3 @@ func TestPackageManager(t *testing.T) {
 		}
 	}
 }
-
-func TestHeapsterMonitoring(t *testing.T) {
-	p := validPlan
-	p.Features.HeapsterMonitoring.Enabled = true
-	p.Features.HeapsterMonitoring.PersistentVolumeEnabled = true
-	p.Storage = OptionalNodeGroup{}
-	assertInvalidPlan(t, p)
-}

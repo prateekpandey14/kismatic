@@ -29,33 +29,31 @@ func GetSSHKeyFile() (string, error) {
 }
 
 type installOptions struct {
-	allowPackageInstallation                  bool
-	disconnectedInstallation                  bool
-	autoConfigureDockerRegistry               bool
-	dockerRegistryIP                          string
-	dockerRegistryPort                        int
-	dockerRegistryCAPath                      string
-	modifyHostsFiles                          bool
-	useDirectLVM                              bool
-	serviceCIDR                               string
-	enableNetworkPolicy                       bool
-	heapsterMonitoringPersistentVolumeEnabled bool
+	allowPackageInstallation    bool
+	disconnectedInstallation    bool
+	autoConfigureDockerRegistry bool
+	dockerRegistryIP            string
+	dockerRegistryPort          int
+	dockerRegistryCAPath        string
+	modifyHostsFiles            bool
+	useDirectLVM                bool
+	serviceCIDR                 string
+	enableNetworkPolicy         bool
 }
 
 func installKismaticMini(node NodeDeets, sshKey string) error {
 	sshUser := node.SSHUser
 	plan := PlanAWS{
-		Etcd:                                      []NodeDeets{node},
-		Master:                                    []NodeDeets{node},
-		Worker:                                    []NodeDeets{node},
-		Ingress:                                   []NodeDeets{node},
-		Storage:                                   []NodeDeets{node},
-		MasterNodeFQDN:                            node.PublicIP,
-		MasterNodeShortName:                       node.PublicIP,
-		SSHKeyFile:                                sshKey,
-		SSHUser:                                   sshUser,
-		AllowPackageInstallation:                  true,
-		HeapsterMonitoringPersistentVolumeEnabled: false,
+		Etcd:                     []NodeDeets{node},
+		Master:                   []NodeDeets{node},
+		Worker:                   []NodeDeets{node},
+		Ingress:                  []NodeDeets{node},
+		Storage:                  []NodeDeets{node},
+		MasterNodeFQDN:           node.PublicIP,
+		MasterNodeShortName:      node.PublicIP,
+		SSHKeyFile:               sshKey,
+		SSHUser:                  sshUser,
+		AllowPackageInstallation: true,
 	}
 	return installKismaticWithPlan(plan, sshKey)
 }
@@ -82,15 +80,14 @@ func buildPlan(nodes provisionedNodes, installOpts installOptions, sshKey string
 		MasterNodeShortName: masterDNS,
 		SSHKeyFile:          sshKey,
 		SSHUser:             sshUser,
-		AutoConfiguredDockerRegistry:              installOpts.autoConfigureDockerRegistry,
-		DockerRegistryCAPath:                      installOpts.dockerRegistryCAPath,
-		DockerRegistryIP:                          installOpts.dockerRegistryIP,
-		DockerRegistryPort:                        installOpts.dockerRegistryPort,
-		ModifyHostsFiles:                          installOpts.modifyHostsFiles,
-		UseDirectLVM:                              installOpts.useDirectLVM,
-		ServiceCIDR:                               installOpts.serviceCIDR,
-		EnableNetworkPolicy:                       installOpts.enableNetworkPolicy,
-		HeapsterMonitoringPersistentVolumeEnabled: installOpts.heapsterMonitoringPersistentVolumeEnabled,
+		AutoConfiguredDockerRegistry: installOpts.autoConfigureDockerRegistry,
+		DockerRegistryCAPath:         installOpts.dockerRegistryCAPath,
+		DockerRegistryIP:             installOpts.dockerRegistryIP,
+		DockerRegistryPort:           installOpts.dockerRegistryPort,
+		ModifyHostsFiles:             installOpts.modifyHostsFiles,
+		UseDirectLVM:                 installOpts.useDirectLVM,
+		ServiceCIDR:                  installOpts.serviceCIDR,
+		EnableNetworkPolicy:          installOpts.enableNetworkPolicy,
 	}
 	return plan
 }

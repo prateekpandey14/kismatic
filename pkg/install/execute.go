@@ -661,23 +661,21 @@ func (ae *ansibleExecutor) buildClusterCatalog(p *Plan) (*ansible.ClusterCatalog
 	}
 
 	cc := ansible.ClusterCatalog{
-		ClusterName:                               p.Cluster.Name,
-		AdminPassword:                             p.Cluster.AdminPassword,
-		TLSDirectory:                              tlsDir,
-		CalicoNetworkType:                         p.Cluster.Networking.Type,
-		ServicesCIDR:                              p.Cluster.Networking.ServiceCIDRBlock,
-		PodCIDR:                                   p.Cluster.Networking.PodCIDRBlock,
-		DNSServiceIP:                              dnsIP,
-		EnableModifyHosts:                         p.Cluster.Networking.UpdateHostsFiles,
-		EnableCalicoPolicy:                        p.Cluster.Networking.PolicyEnabled,
-		EnablePackageInstallation:                 p.Cluster.AllowPackageInstallation,
-		PackageRepoURLs:                           p.Cluster.PackageRepoURLs,
-		DisconnectedInstallation:                  p.Cluster.DisconnectedInstallation,
-		HeapsterMonitoringEnabled:                 p.Features.HeapsterMonitoring.Enabled,
-		HeapsterMonitoringPersistentVolumeEnabled: p.Features.HeapsterMonitoring.PersistentVolumeEnabled,
-		VolumeAllowedIPs:                          volumeAllowedIPs(p),
-		KuberangPath:                              filepath.Join("kuberang", "linux", "amd64", "kuberang"),
-		TargetVersion:                             KismaticVersion.String(),
+		ClusterName:               p.Cluster.Name,
+		AdminPassword:             p.Cluster.AdminPassword,
+		TLSDirectory:              tlsDir,
+		CalicoNetworkType:         p.Cluster.Networking.Type,
+		ServicesCIDR:              p.Cluster.Networking.ServiceCIDRBlock,
+		PodCIDR:                   p.Cluster.Networking.PodCIDRBlock,
+		DNSServiceIP:              dnsIP,
+		EnableModifyHosts:         p.Cluster.Networking.UpdateHostsFiles,
+		EnableCalicoPolicy:        p.Cluster.Networking.PolicyEnabled,
+		EnablePackageInstallation: p.Cluster.AllowPackageInstallation,
+		PackageRepoURLs:           p.Cluster.PackageRepoURLs,
+		DisconnectedInstallation:  p.Cluster.DisconnectedInstallation,
+		VolumeAllowedIPs:          volumeAllowedIPs(p),
+		KuberangPath:              filepath.Join("kuberang", "linux", "amd64", "kuberang"),
+		TargetVersion:             KismaticVersion.String(),
 	}
 	cc.LocalKubeconfigDirectory = filepath.Join(ae.options.GeneratedAssetsDirectory, "kubeconfig")
 	// absolute path required for ansible
@@ -729,6 +727,8 @@ func (ae *ansibleExecutor) buildClusterCatalog(p *Plan) (*ansible.ClusterCatalog
 		})
 	}
 	cc.EnableGluster = p.Storage.Nodes != nil && len(p.Storage.Nodes) > 0
+
+	cc.HeapsterMonitoringPersistentVolumeEnabled = p.Storage.Nodes != nil && len(p.Storage.Nodes) > 0
 
 	return &cc, nil
 }
