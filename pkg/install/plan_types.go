@@ -155,7 +155,11 @@ type PackageManager struct {
 }
 
 type HeapsterMonitoring struct {
-	Enabled                 bool
+	Enabled        bool
+	FeatureStorage FeatureStorage `yaml:"storage"`
+}
+
+type FeatureStorage struct {
 	PersistentVolumeEnabled bool `yaml:"persistent_volume_enabled"`
 }
 

@@ -678,7 +678,7 @@ func (ae *ansibleExecutor) buildClusterCatalog(p *Plan) (*ansible.ClusterCatalog
 		PackageRepoURLs:                           p.Cluster.PackageRepoURLs,
 		DisconnectedInstallation:                  p.Cluster.DisconnectedInstallation,
 		HeapsterMonitoringEnabled:                 p.Features.HeapsterMonitoring.Enabled,
-		HeapsterMonitoringPersistentVolumeEnabled: p.Features.HeapsterMonitoring.PersistentVolumeEnabled,
+		HeapsterMonitoringPersistentVolumeEnabled: p.Features.HeapsterMonitoring.FeatureStorage.PersistentVolumeEnabled,
 		VolumeAllowedIPs:                          volumeAllowedIPs(p),
 		KuberangPath:                              filepath.Join("kuberang", "linux", "amd64", "kuberang"),
 		TargetVersion:                             KismaticVersion.String(),

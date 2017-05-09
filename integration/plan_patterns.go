@@ -66,7 +66,8 @@ features:
     provider: helm
   heapster_monitoring:
     enabled: true
-    persistent_volume_enabled: {{.HeapsterMonitoringPersistentVolumeEnabled}}
+    storage:
+      persistent_volume_enabled: {{.HeapsterMonitoringPersistentVolumeEnabled}}
 etcd:
   expected_count: {{len .Etcd}}
   nodes:{{range .Etcd}}
