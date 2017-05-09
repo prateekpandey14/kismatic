@@ -5,27 +5,28 @@ type NFSVolume struct {
 }
 
 type PlanAWS struct {
-	Etcd                         []NodeDeets
-	Master                       []NodeDeets
-	Worker                       []NodeDeets
-	Ingress                      []NodeDeets
-	Storage                      []NodeDeets
-	NFSVolume                    []NFSVolume
-	MasterNodeFQDN               string
-	MasterNodeShortName          string
-	SSHUser                      string
-	SSHKeyFile                   string
-	HomeDirectory                string
-	AllowPackageInstallation     bool
-	DisconnectedInstallation     bool
-	AutoConfiguredDockerRegistry bool
-	DockerRegistryIP             string
-	DockerRegistryPort           int
-	DockerRegistryCAPath         string
-	ModifyHostsFiles             bool
-	UseDirectLVM                 bool
-	ServiceCIDR                  string
-	EnableNetworkPolicy          bool
+	Etcd                                      []NodeDeets
+	Master                                    []NodeDeets
+	Worker                                    []NodeDeets
+	Ingress                                   []NodeDeets
+	Storage                                   []NodeDeets
+	NFSVolume                                 []NFSVolume
+	MasterNodeFQDN                            string
+	MasterNodeShortName                       string
+	SSHUser                                   string
+	SSHKeyFile                                string
+	HomeDirectory                             string
+	AllowPackageInstallation                  bool
+	DisconnectedInstallation                  bool
+	AutoConfiguredDockerRegistry              bool
+	DockerRegistryIP                          string
+	DockerRegistryPort                        int
+	DockerRegistryCAPath                      string
+	ModifyHostsFiles                          bool
+	UseDirectLVM                              bool
+	ServiceCIDR                               string
+	EnableNetworkPolicy                       bool
+	HeapsterMonitoringPersistentVolumeEnabled bool
 }
 
 const planAWSOverlay = `cluster:
@@ -63,6 +64,9 @@ features:
   package_manager:
     enabled: true
     provider: helm
+  heapster_monitoring:
+    enabled: true
+    persistent_volume_enabled: {{.HeapsterMonitoringPersistentVolumeEnabled}}
 etcd:
   expected_count: {{len .Etcd}}
   nodes:{{range .Etcd}}

@@ -133,6 +133,12 @@ func (p *Plan) validate() (bool, []error) {
 	v.validate(disconnectedInstallation{cluster: p.Cluster, registryProvided: p.ConfigureDockerWithPrivateRegistry()})
 	// validate features that are dependent on storage
 	v.validate(&p.Features)
+	if p.Features.HeapsterMonitoring.Enabled {
+		// cannot use a PV when relying on storage nodes and storage nodes are not defined in the plan
+		if p.Features.HeapsterMonitoring.PersistentVolumeEnabled && len(p.Storage.Nodes) == 0 {
+			v.addError(errors.New("Heapster monitoring cannot use a persistent volume without any storage nodes"))
+		}
+	}
 	v.validateWithErrPrefix("Etcd nodes", &p.Etcd)
 	v.validateWithErrPrefix("Master nodes", &p.Master)
 	v.validateWithErrPrefix("Worker nodes", &p.Worker)
@@ -221,6 +227,7 @@ func (s *SSHConfig) validate() (bool, []error) {
 func (f *Features) validate() (bool, []error) {
 	v := newValidator()
 	v.validate(&f.PackageManager)
+	//v.validate(&f.HeapsterMonitoring)
 	return v.valid()
 }
 

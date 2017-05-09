@@ -72,6 +72,7 @@ type ClusterCatalog struct {
 	LocalKubeconfigDirectory string `yaml:"local_kubeconfig_directory"`
 
 	// heapster
+	HeapsterMonitoringEnabled                 bool `yaml:"heapster_monitoring_enabled"`
 	HeapsterMonitoringPersistentVolumeEnabled bool `yaml:"heapster_monitoring_persistent_volume_enabled"`
 }
 

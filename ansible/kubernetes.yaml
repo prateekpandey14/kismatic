@@ -40,4 +40,5 @@
   - include: _heapster-volume.yaml
     when: heapster_monitoring_persistent_volume_enabled|bool == true
   - include: _heapster.yaml
+    when: heapster_monitoring_enabled|bool == true
   - include: _update-version.yaml
