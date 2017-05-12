@@ -61,6 +61,10 @@ features:
   package_manager:
     enabled: true
     provider: helm
+  heapster:
+    enabled: true
+    storage:
+      persistent_volume_claim: ""
 etcd:
   expected_count: {{len .Etcd}}
   nodes:{{range .Etcd}}

@@ -140,16 +140,22 @@ type SSHConnection struct {
 }
 
 type Features struct {
-	PackageManager PackageManager `yaml:"package_manager"`
+	PackageManager     PackageManager     `yaml:"package_manager"`
+	HeapsterMonitoring HeapsterMonitoring `yaml:"heapster"`
 }
 
-type BaseFeature struct {
+type PackageManager struct {
 	Enabled  bool
 	Provider string
 }
 
-type PackageManager struct {
-	BaseFeature `yaml:",inline"`
+type HeapsterMonitoring struct {
+	Enabled bool
+	Storage HeapsterStorage `yaml:"storage"`
+}
+
+type HeapsterStorage struct {
+	PersistentVolumeClaim string `yaml:"persistent_volume_claim"`
 }
 
 // GetUniqueNodes returns a list of the unique nodes that are listed in the plan file.

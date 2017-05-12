@@ -802,19 +802,15 @@ func TestPackageManager(t *testing.T) {
 	}{
 		{
 			pm: PackageManager{
-				BaseFeature{
-					Enabled:  true,
-					Provider: "helm",
-				},
+				Enabled:  true,
+				Provider: "helm",
 			},
 			valid: true,
 		},
 		{
 			pm: PackageManager{
-				BaseFeature{
-					Enabled:  true,
-					Provider: "foo",
-				},
+				Enabled:  true,
+				Provider: "foo",
 			},
 			valid: false,
 		},

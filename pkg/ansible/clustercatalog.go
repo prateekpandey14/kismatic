@@ -69,6 +69,10 @@ type ClusterCatalog struct {
 	DockerDirectLVMDeferredDeletionEnabled bool   `yaml:"docker_direct_lvm_deferred_deletion_enabled"`
 
 	LocalKubeconfigDirectory string `yaml:"local_kubeconfig_directory"`
+
+	// heapster
+	HeapsterMonitoringEnabled                   bool   `yaml:"heapster_monitoring_enabled"`
+	HeapsterMonitoringPersistentVolumeClaimName string `yaml:"heapster_monitoring_persistent_volume_claim_name,omitempty"`
 }
 
 type NFSVolume struct {

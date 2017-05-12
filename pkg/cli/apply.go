@@ -136,6 +136,14 @@ func (c *applyCmd) run() error {
 		}
 	}
 
+	// Heapster
+	if plan.Features.HeapsterMonitoring.Enabled {
+		util.PrintHeader(c.out, "Installing Heapster on the Cluster", '=')
+		if err := c.executor.RunPlay("_heapster.yaml", plan); err != nil {
+			return fmt.Errorf("error installing heapster: %v", err)
+		}
+	}
+
 	// Run smoketest
 	if err := c.executor.RunSmokeTest(plan); err != nil {
 		return fmt.Errorf("error running smoke test: %v", err)

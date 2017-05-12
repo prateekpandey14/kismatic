@@ -723,6 +723,10 @@ func (ae *ansibleExecutor) buildClusterCatalog(p *Plan) (*ansible.ClusterCatalog
 	}
 	cc.EnableGluster = p.Storage.Nodes != nil && len(p.Storage.Nodes) > 0
 
+	// HeapsterMonitoring
+	cc.HeapsterMonitoringEnabled = p.Features.HeapsterMonitoring.Enabled
+	cc.HeapsterMonitoringPersistentVolumeClaimName = p.Features.HeapsterMonitoring.Storage.PersistentVolumeClaim
+
 	return &cc, nil
 }
 
