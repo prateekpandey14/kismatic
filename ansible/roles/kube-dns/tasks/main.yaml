@@ -21,4 +21,3 @@
     fail:
       msg: "Timed out waiting for DNS pods to be in the ready state."
     when: readyReplicas.stdout|int != kube_dns_replicas|int
-  - debug: var=out.stdout_lines

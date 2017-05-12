@@ -1,5 +1,3 @@
-# - debug:
-#     var: item.1
 - set_fact:
     nfs_index: "{{item.0}}"
     nfs_host: "{{item.1.host}}"
@@ -19,14 +17,8 @@
   shell: "df /mnt/test-{{nfs_index}} | grep -oP '\\K\\d+(?=\\s+\\d+%)'"
   register: nfs_size_blob
 
-# - debug:
-#     var: nfs_size_blob
-
 - set_fact:
     nfs_size: "{{nfs_size_blob.stdout}}"
-
-# - debug:
-#     var: nfs_size
 
 - name: unmount share read/write
   mount:
