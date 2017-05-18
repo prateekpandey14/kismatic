@@ -723,6 +723,13 @@ func (ae *ansibleExecutor) buildClusterCatalog(p *Plan) (*ansible.ClusterCatalog
 	}
 	cc.EnableGluster = p.Storage.Nodes != nil && len(p.Storage.Nodes) > 0
 
+	// Monitoring
+	cc.PrometheusMonitoringConfigFile = p.Features.Monitoring.Prometheus.ConfigFile
+	cc.PrometheusMonitoringAlertmanagerPersistentVolumeClaimName = p.Features.Monitoring.Prometheus.AlertmanagerStorage.PersistentVolumeClaim
+	cc.PrometheusMonitoringServerPersistentVolumeClaimName = p.Features.Monitoring.Prometheus.ServerStorage.PersistentVolumeClaim
+	cc.GrafanaMonitoringConfigFile = p.Features.Monitoring.Grafana.ConfigFile
+	cc.GrafanaMonitoringPersistentVolumeClaimName = p.Features.Monitoring.Grafana.Storage.PersistentVolumeClaim
+
 	return &cc, nil
 }
 

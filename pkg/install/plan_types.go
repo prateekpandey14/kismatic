@@ -141,10 +141,32 @@ type SSHConnection struct {
 
 type Features struct {
 	PackageManager PackageManager `yaml:"package_manager"`
+	Monitoring     Monitoring
 }
 
 type PackageManager struct {
 	Enabled bool
+}
+
+type Monitoring struct {
+	Enabled    bool
+	Prometheus Prometheus
+	Grafana    Grafana
+}
+
+type Prometheus struct {
+	ConfigFile          string  `yaml:"config_file"`
+	AlertmanagerStorage Storage `yaml:"alertmanager_storage"`
+	ServerStorage       Storage `yaml:"server_storage"`
+}
+
+type Grafana struct {
+	ConfigFile string `yaml:"config_file"`
+	Storage    Storage
+}
+
+type Storage struct {
+	PersistentVolumeClaim string `yaml:"persistent_volume_claim"`
 }
 
 // GetUniqueNodes returns a list of the unique nodes that are listed in the plan file.

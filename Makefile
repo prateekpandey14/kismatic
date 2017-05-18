@@ -133,6 +133,7 @@ dist: vendor-ansible/out vendor-provision/out vendor-kuberang/$(KUBERANG_VERSION
 	rm -f out/kismatic.tar.gz
 	tar -czf kismatic.tar.gz -C out .
 	mv kismatic.tar.gz out
+	cp -R charts/ out/charts/
 
 integration/vendor: tools/glide
 	go get github.com/onsi/ginkgo/ginkgo

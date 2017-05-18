@@ -794,3 +794,113 @@ func TestRepository(t *testing.T) {
 		}
 	}
 }
+
+func TestMonitoringFeature(t *testing.T) {
+	tests := []struct {
+		m     Monitoring
+		valid bool
+	}{
+		{
+			m: Monitoring{
+				Enabled: true,
+				Prometheus: Prometheus{
+					ConfigFile: "",
+				},
+				Grafana: Grafana{
+					ConfigFile: "",
+				},
+			},
+			valid: true,
+		},
+		{
+			m: Monitoring{
+				Enabled: false,
+				Prometheus: Prometheus{
+					ConfigFile: "",
+				},
+				Grafana: Grafana{
+					ConfigFile: "",
+				},
+			},
+			valid: true,
+		},
+		{
+			m: Monitoring{
+				Enabled: true,
+				Prometheus: Prometheus{
+					ConfigFile: "/absolute",
+				},
+				Grafana: Grafana{
+					ConfigFile: "",
+				},
+			},
+			valid: true,
+		},
+		{
+			m: Monitoring{
+				Enabled: true,
+				Prometheus: Prometheus{
+					ConfigFile: "",
+				},
+				Grafana: Grafana{
+					ConfigFile: "/absolute",
+				},
+			},
+			valid: true,
+		},
+		{
+			m: Monitoring{
+				Enabled: true,
+				Prometheus: Prometheus{
+					ConfigFile: "/absolute",
+				},
+				Grafana: Grafana{
+					ConfigFile: "/absolute",
+				},
+			},
+			valid: true,
+		},
+		{
+			m: Monitoring{
+				Enabled: true,
+				Prometheus: Prometheus{
+					ConfigFile: "absolute",
+				},
+				Grafana: Grafana{
+					ConfigFile: "/absolute",
+				},
+			},
+			valid: false,
+		},
+		{
+			m: Monitoring{
+				Enabled: true,
+				Prometheus: Prometheus{
+					ConfigFile: "/absolute",
+				},
+				Grafana: Grafana{
+					ConfigFile: "absolute",
+				},
+			},
+			valid: false,
+		},
+		{
+			m: Monitoring{
+				Enabled: true,
+				Prometheus: Prometheus{
+					ConfigFile: "absolute",
+				},
+				Grafana: Grafana{
+					ConfigFile: "absolute",
+				},
+			},
+			valid: false,
+		},
+	}
+	for i, test := range tests {
+		ok, _ := test.m.validate()
+		if ok != test.valid {
+			t.Errorf("test %d: expect %t, but got %t", i, test.valid, ok)
+		}
+	}
+}

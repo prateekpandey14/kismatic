@@ -219,6 +219,19 @@ func (s *SSHConfig) validate() (bool, []error) {
 
 func (f *Features) validate() (bool, []error) {
 	v := newValidator()
+	//v.validate(&f.PackageManager)
+	v.validate(&f.Monitoring)
+	return v.valid()
+}
+
+func (m *Monitoring) validate() (bool, []error) {
+	v := newValidator()
+	if m.Enabled && m.Prometheus.ConfigFile != "" && !filepath.IsAbs(m.Prometheus.ConfigFile) {
+		v.addError(errors.New("Path to the prometheus config file must be absolute"))
+	}
+	if m.Enabled && m.Grafana.ConfigFile != "" && !filepath.IsAbs(m.Grafana.ConfigFile) {
+		v.addError(errors.New("Path to the grafana config file must be absolute"))
+	}
 	return v.valid()
 }
 

@@ -112,12 +112,10 @@ func (fp *FilePlanner) Write(p *Plan) error {
 			prevIndent = indent
 			if thiscomment, ok := oneTimeComments[strings.Join(s.s, ".")]; ok {
 				f.WriteString(fmt.Sprintf("%-40s # %s\n", text, thiscomment))
-				delete(oneTimeComments, matched[1])
 				continue
 			}
 			if thiscomment, ok := oneTimeComments[matched[1]]; ok {
 				f.WriteString(fmt.Sprintf("%-40s # %s\n", text, thiscomment))
-				delete(oneTimeComments, matched[1])
 				continue
 			}
 		}
@@ -161,6 +159,7 @@ func WritePlanTemplate(p *Plan, w PlanReadWriter) error {
 
 	// Features
 	p.Features.PackageManager.Enabled = true
+	p.Features.Monitoring.Enabled = true
 
 	// Set DockerRegistry defaults
 	p.DockerRegistry.Port = 8443
@@ -268,4 +267,6 @@ var commentMap = map[string]string{
 	"nfs":                                                "A set of NFS volumes for use by on-cluster persistent workloads, managed by Kismatic.",
 	"nfs.nfs_host":                                       "The host name or ip address of an NFS server.",
 	"nfs.mount_path":                                     "The mount path of an NFS share. Must start with /",
+	"config_file":                                        "Absolute path to a file containing values to override the default deployment options.",
+	"persistent_volume_claim":                            "Provide the name of the persistent volume claim that you will create after installation. If not specified, the data will be stored in ephemeral storage.",
 }

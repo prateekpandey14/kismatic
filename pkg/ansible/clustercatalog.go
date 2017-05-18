@@ -69,6 +69,13 @@ type ClusterCatalog struct {
 	DockerDirectLVMDeferredDeletionEnabled bool   `yaml:"docker_direct_lvm_deferred_deletion_enabled"`
 
 	LocalKubeconfigDirectory string `yaml:"local_kubeconfig_directory"`
+
+	// monitroing
+	PrometheusMonitoringConfigFile                            string `yaml:"prometheus_monitoring_config_file"`
+	PrometheusMonitoringAlertmanagerPersistentVolumeClaimName string `yaml:"prometheus_monitoring_alertmanager_persistent_volume_claim_name,omitempty"`
+	PrometheusMonitoringServerPersistentVolumeClaimName       string `yaml:"prometheus_monitoring_server_persistent_volume_claim_name,omitempty"`
+	GrafanaMonitoringConfigFile                               string `yaml:"grafana_monitoring_config_file"`
+	GrafanaMonitoringPersistentVolumeClaimName                string `yaml:"grafana_monitoring_persistent_volume_claim_name,omitempty"`
 }
 
 type NFSVolume struct {

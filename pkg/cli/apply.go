@@ -136,6 +136,14 @@ func (c *applyCmd) run() error {
 		}
 	}
 
+	// Monitoring
+	if plan.Features.Monitoring.Enabled {
+		util.PrintHeader(c.out, "Installing Prometheus/Grafana Monitoring on the Cluster", '=')
+		if err := c.executor.RunPlay("_monitoring.yaml", plan); err != nil {
+			return fmt.Errorf("error installing monitoring: %v", err)
+		}
+	}
+
 	// Run smoketest
 	if err := c.executor.RunSmokeTest(plan); err != nil {
 		return fmt.Errorf("error running smoke test: %v", err)
