@@ -26,6 +26,9 @@ type PlanAWS struct {
 	UseDirectLVM                 bool
 	ServiceCIDR                  string
 	EnableHelm                   bool
+	AlertManagerPVC              string
+	PrometheusPVC                string
+	GrafanaPVC                   string
 }
 
 const planAWSOverlay = `cluster:
@@ -63,6 +66,16 @@ features:
     enabled: {{.EnableHelm}}
   monitoring:
     enabled: {{.EnableHelm}}
+    prometheus:
+      values: ""
+      alertmanager_storage:
+         persistent_volume_claim: "{{.AlertManagerPVC}}"
+      server_storage:
+        persistent_volume_claim: "{{.PrometheusPVC}}"
+    grafana:
+      values: ""
+      storage:
+        persistent_volume_claim: "{{.GrafanaPVC}}"
 etcd:
   expected_count: {{len .Etcd}}
   nodes:{{range .Etcd}}
