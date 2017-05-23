@@ -19,6 +19,8 @@ PROVISIONER_VERSION = v1.2.0
 KUBERANG_VERSION = v1.1.3
 GO_VERSION = 1.8.0
 HELM_VERSION = v2.4.1
+CHARTS_REPO = https://github.com/dkoshkin/charts
+CHARTS_VERSION = v0.1
 
 ifeq ($(origin GLIDE_GOOS), undefined)
 	GLIDE_GOOS := $(HOST_GOOS)
@@ -70,6 +72,7 @@ clean:
 	rm -rf integration/vendor
 	rm -rf vendor-kuberang
 	rm -rf vendor-helm
+	rm -rf vendor-charts
 
 test: vendor
 	@docker run                                                   \
@@ -117,7 +120,15 @@ vendor-helm/out:
 	rm -rf vendor-helm/$(GOOS)-amd64
 	chmod +x vendor-helm/out/helm
 
-dist: vendor-ansible/out vendor-provision/out vendor-kuberang/$(KUBERANG_VERSION) vendor-helm/out build build-inspector
+vendor-charts/out:
+	mkdir -p vendor-charts/out/
+	mkdir -p vendor-charts/charts/
+	curl -L $(CHARTS_REPO)/archive/$(CHARTS_VERSION).tar.gz | tar zx -C vendor-charts/charts --strip-components=1
+	mkdir -p vendor-charts/out/monitoring/
+	cp -r vendor-charts/charts/stable/prometheus vendor-charts/out/monitoring/prometheus
+	cp -r vendor-charts/charts/stable/grafana vendor-charts/out/monitoring/grafana
+
+dist: vendor-ansible/out vendor-provision/out vendor-kuberang/$(KUBERANG_VERSION) vendor-helm/out vendor-charts/out build build-inspector
 	mkdir -p out
 	cp bin/$(GOOS)/kismatic out
 	mkdir -p out/ansible
@@ -133,7 +144,7 @@ dist: vendor-ansible/out vendor-provision/out vendor-kuberang/$(KUBERANG_VERSION
 	rm -f out/kismatic.tar.gz
 	tar -czf kismatic.tar.gz -C out .
 	mv kismatic.tar.gz out
-	cp -R charts/ out/charts/
+	cp -R vendor-charts/out out/charts/
 
 integration/vendor: tools/glide
 	go get github.com/onsi/ginkgo/ginkgo
