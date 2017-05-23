@@ -70,14 +70,33 @@ the log pipeline components will be secured using TLS:
 
 This will require new certificates to be generated during the cert generation phase.
 
-## Plan File
+## Feature in plan file
 The centralized logging solution will be controlled by a feature in the plan file:
 ```
 cluster:
-# ...
+...
 features:
   logging:
     enabled: true|false
     elastic_search:
       persistent_volume_claim: "" # Name of persistent volume claim that will be provisioned after cluster is up.
+```
+
+## Log Rotation
+Kismatic will configure the docker daemon to perform log rotation. This is inline with the 
+approach taken by upstream Kubernetes ([PR](https://github.com/kubernetes/kubernetes/pull/40634)). This takes care of log rotation for applications and cluster components running in containers. Log
+rotation will also be necessary for anything running outside of containers, such as
+etcd, the kubelet, gluster services, etc. We might be able to use journald's log rotation
+mechanism, or setup `logrotate` for these services.
+
+The plan file will expose two new options that will allow the user to specify the maximum 
+log file size and the maximum number of files. 
+
+```
+...
+cluster:
+  log_rotation:
+    max_file_size: 20m
+    max_files: 5
+...
 ```
